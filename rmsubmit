@@ -1,0 +1,28 @@
+#!/usr/bin/perl -w
+
+use strict;
+use English;
+use File::Basename;
+
+# Get the base program name and build usage string
+my $CMD = &basename($0);
+my $USAGE = "usage: $CMD <class> <filename>\n";
+
+# Get the user id and class number
+my $user = scalar getpwuid $UID or die "User not recognized\n";
+my $class = shift @ARGV;
+die $USAGE unless defined $class;
+
+# Build the path to the submit directory
+my $submit_dir = "/home/student/Submit/" .
+                 "$class/" . $user . "/";
+
+# Get the name of the file to delete
+my $filename = shift @ARGV;
+die $USAGE unless defined $filename;
+
+# Build full path to file and attempt to rm
+my $file_path = $submit_dir . $filename;
+`rm $file_path`;
+die "Failed to remove\n" if $?;
+print "removing $filename from your $class submit directory...\n";
